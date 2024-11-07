@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "immoware24 PDF Downloader",
+    "version": "1.0",
+    "description": "quality of life extension",
+    "permissions": ["activeTab", "scripting", "https://*/*"],
+    "background":{
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "hello.html",
+      "default_icon": "immoware_pdf.png"
+    },
+    "commands": {
+      "_execute_action": {
+        "suggested_key": {
+          "default": "Ctrl+B",
+          "mac": "Command+B"
+        }
+       }
+    },
+    "scripts": ["popup.js"],
+    "icons": {
+      "16": "images/icon-16.png",
+      "32": "images/icon-32.png",
+      "48": "images/icon-48.png",
+      "128":  "images/icon-128.png"
+    }
