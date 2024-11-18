@@ -4,11 +4,9 @@
     "version": "1.0",
     "description": "quality of life extension",
     "permissions": ["activeTab", "scripting", "https://*/*"],
-    "background":{
-      "service_worker": "background.js"
-    },
+
     "action": {
-      "default_popup": "hello.html",
+      "default_popup": "index.html",
       "default_icon": "images/immoware_pdf.png"
     },
     "commands": {
@@ -17,16 +15,14 @@
           "default": "Ctrl+B",
           "mac": "Command+B"
         }
-       }
+      }
     },
-    "scripts": ["popup.js"],
-/*     "icons": {
-      "16": "images/icon-16.png",
-      "32": "images/icon-32.png",
-      "48": "images/icon-48.png",
-      "128":  "images/icon-128.png"
-    } */
-  {
+    "icons": {
+      "16": "images/immoware_pdf16.png",
+      "32": "images/immoware_pdf32.png",
+      "48": "images/immoware_pdf48.png",
+      "128": "images/immoware_pdf128.png"
+    },
     "content_scripts": [
       {
         "js": ["scripts/content.js"],
@@ -37,4 +33,3 @@
       }
     ]
   }
-}
