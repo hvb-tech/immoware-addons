@@ -3,7 +3,10 @@
     "name": "immoware24 PDF Downloader",
     "version": "1.0",
     "description": "quality of life extension",
-    "permissions": ["activeTab", "scripting", "https://*/*"],
+    "background": {
+      "service_worker": "scripts/content.js"
+    },
+    "permissions": ["activeTab", "scripting", "https://*/*", "nativeMessaging", "storage"],
 
     "action": {
       "default_popup": "index.html",
@@ -26,6 +29,15 @@
     "content_scripts": [
       {
         "js": ["scripts/content.js"],
+        "matches": [
+          "https://*.awi-rems.de/*",
+          "https://*.immoware24.de/*"
+        ]
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["index.html","scripts/content.js"],
         "matches": [
           "https://*.awi-rems.de/*",
           "https://*.immoware24.de/*"
