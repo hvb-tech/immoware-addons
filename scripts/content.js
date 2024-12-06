@@ -97,6 +97,8 @@ async function downloadLinks(url) {
         await downloadLinks(url);
         await new Promise(resolve => setTimeout(resolve, 5000)); // 5-second delay between pages
       }
+
+      console.log("Finished download.");
   }
 
 
@@ -104,20 +106,24 @@ async function downloadLinks(url) {
 /* actual execution code starts here */
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
   if (request.action === "download") {
     console.log("Request to download received!");
     sendResponse({status: "BUSY WITH DOWNLOAD"});
 
-    details = extractLastPageUrl();
-    console.log(details);
+    try {
+      const details = await extractLastPageUrl(); // Await the Promise to get the resolved value
+      console.log(details);
 
-    downloadPdf(details[2], details[1]);
-    //downloadPdf();
+      if (details.length === 3) { // Ensure that you have the expected data
+        await downloadPdf(details[2], details[1]); // Await the downloadPdf function
+      } else {
+        console.error('Expected details not found:', details);
+      }
 
-    sendResponse({status: "READY TO DOWNLOAD"});
-
+    } catch (error) {
+      console.error('Error during download process:', error);
+      sendResponse({status: "ERROR", message: error.message});
+    }
   }
 });
-
-
