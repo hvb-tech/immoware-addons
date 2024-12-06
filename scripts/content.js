@@ -52,10 +52,19 @@ function extractLastPageUrl() {
             }
 
             break; // Exit the loop after finding the first valid control
+        } else {
+
+          // edge case if it's only one page: no dmsDocPage in href. -> 
+
+          // baseUrl equals the last page
+          dlDetails.push(baseUrl);
+          // there's only 1 page to loop through
+          dlDetails.push(1);
+          //
+          const modifiedUrl = baseUrl + '/dmsDocPage/' ;
+          dlDetails.push(modifiedUrl);
         }
     }
-
-    console.log('No pagination control with dmsDocPage found.');
 
   return dlDetails
 }
