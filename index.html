@@ -4,10 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+         body {
+            min-width: 390px; 
+            min-height: 100px;
+            margin: 0; 
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .info-image {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .info-box {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 1;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: auto;
+        }
+
+        .info-image:hover .info-box {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Immoware24 PDF-Downloader</h1>
-    <button id= "downloadButton">Download PDF</button>
+    <h1>Immoware24 DMS-Downloader</h1>
+    <button id= "downloadButton">Download</button>
     <script src="scripts/popup.js"></script> 
+    <div class="info-image">
+        <img src="images/info.png" alt="Info" width="10" height="10">
+        <div class="info-box">
+            <p>Step 1: Gehe auf immoware24 ins DMS.</p>
+            <p>Step 2: Nutze die Filter-Funktion, um die Dokumente auszuwählen, die heruntergeladen werden sollen.<br> Alternativ: Gehe auf den Tag, der den Dokumenten entspricht.</p>
+            <p>Step 3: Wähle die Darstellung "Tabellen-Ansicht" aus.</p>
+            <p>Step 4: Drücke den Download-Button.</p>
+            <p>Step 5: Fertig! :)</p>
+        </div>
+    </div>
 </body>
 </html>
