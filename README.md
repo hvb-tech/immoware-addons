@@ -4,7 +4,7 @@ Small extension to easily bulk download files from immoware24.de
 ## Table of Contents - Users DE
 - [Installation] (#installation)
 
-Schritt 1: Gehe auf <Code> und klappe den Reiter aus.
+Schritt 1: Gehe auf Code und klappe den Reiter aus.
 Schritt 2: Gehe auf "Download ZIP" und lade die Extension lokal herunter.
 Schritt 3: Gehe in den Download-Ordner und entpacke die ZIP-Datei.
 Schritt 4: Öffne Chrome und gehe auf "Erweiterungen".
