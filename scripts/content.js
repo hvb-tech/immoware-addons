@@ -118,7 +118,7 @@ async function downloadLinks(url) {
 chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
   if (request.action === "download") {
     console.log("Request to download received!");
-    sendResponse({status: "BUSY WITH DOWNLOAD"});
+    let response = {status: "BUSY WITH DOWNLOAD"};
 
     try {
       const details = await extractLastPageUrl(); // Await the Promise to get the resolved value
@@ -126,13 +126,21 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
 
       if (details.length === 3) { // Ensure that you have the expected data
         await downloadPdf(details[2], details[1]); // Await the downloadPdf function
+        response = {status: "SUCCESS"};
       } else {
-        console.error('Expected details not found:', details);
+        if (details.length === 6){
+          await downloadPdf(details[5], details[4]); // Await the downloadPdf function
+          response = {status: "SUCCESS"};
+        }
+        else{
+          console.error('Expected details not found:', details);
+          response = {status: "ERROR", message: 'Expected details not found'};
+        }
       }
-
     } catch (error) {
       console.error('Error during download process:', error);
-      sendResponse({status: "ERROR", message: error.message});
+      response = {status: "ERROR", message: error.message};
     }
+    sendResponse(response);
   }
 });
