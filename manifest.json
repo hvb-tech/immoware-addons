@@ -1,16 +1,16 @@
 {
     "manifest_version": 3,
-    "name": "immoware24 PDF Downloader",
+    "name": "immoware24 Mail Downloader",
     "version": "1.0",
     "description": "quality of life extension",
     "background": {
       "service_worker": "scripts/content.js"
     },
-    "permissions": ["activeTab", "scripting", "https://*/*", "nativeMessaging", "storage"],
+    "permissions": ["activeTab", "scripting", "nativeMessaging", "storage"],
 
     "action": {
       "default_popup": "index.html",
-      "default_icon": "images/immoware_pdf.png"
+      "default_icon": "images/info.png"
     },
     "commands": {
       "_execute_action": {
@@ -21,10 +21,10 @@
       }
     },
     "icons": {
-      "16": "images/immoware_pdf16.png",
-      "32": "images/immoware_pdf32.png",
-      "48": "images/immoware_pdf48.png",
-      "128": "images/immoware_pdf128.png"
+      "16": "images/info.png",
+      "32": "images/info.png",
+      "48": "images/info.png",
+      "128": "images/info.png"
     },
     "content_scripts": [
       {
