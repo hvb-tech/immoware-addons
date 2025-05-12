@@ -1,47 +1,47 @@
 {
-    "manifest_version": 3,
-    "name": "immoware24 Mail Downloader",
-    "version": "1.0",
-    "description": "quality of life extension",
-    "background": {
-      "service_worker": "scripts/content.js"
-    },
-    "permissions": ["activeTab", "scripting", "nativeMessaging", "storage"],
+  "manifest_version": 3,
+  "name": "immoware24 PDF Downloader",
+  "version": "1.0",
+  "description": "quality of life extension",
+  "background": {
+    "service_worker": "scripts/content.js"
+  },
+  "permissions": ["activeTab", "scripting", "https://*/*", "nativeMessaging", "storage"],
 
-    "action": {
-      "default_popup": "index.html",
-      "default_icon": "images/info.png"
-    },
-    "commands": {
-      "_execute_action": {
-        "suggested_key": {
-          "default": "Ctrl+B",
-          "mac": "Command+B"
-        }
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "images/immoware_pdf.png"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+B",
+        "mac": "Command+B"
       }
-    },
-    "icons": {
-      "16": "images/info.png",
-      "32": "images/info.png",
-      "48": "images/info.png",
-      "128": "images/info.png"
-    },
-    "content_scripts": [
-      {
-        "js": ["scripts/content.js"],
-        "matches": [
-          "https://*.awi-rems.de/*",
-          "https://*.immoware24.de/*"
-        ]
-      }
-    ],
-    "web_accessible_resources": [
-      {
-        "resources": ["index.html","scripts/content.js"],
-        "matches": [
-          "https://*.awi-rems.de/*",
-          "https://*.immoware24.de/*"
-        ]
-      }
-    ]
-  }
+    }
+  },
+  "icons": {
+    "16": "images/immoware_pdf16.png",
+    "32": "images/immoware_pdf32.png",
+    "48": "images/immoware_pdf48.png",
+    "128": "images/immoware_pdf128.png"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": [
+        "https://*.awi-rems.de/*",
+        "https://*.immoware24.de/*"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html","scripts/content.js"],
+      "matches": [
+        "https://*.awi-rems.de/*",
+        "https://*.immoware24.de/*"
+      ]
+    }
+  ]
+}
