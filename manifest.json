@@ -6,7 +6,7 @@
   "background": {
     "service_worker": "scripts/content.js"
   },
-  "permissions": ["activeTab", "scripting", "https://*/*", "nativeMessaging", "storage"],
+  "permissions": ["activeTab", "tabs", "scripting", "nativeMessaging", "storage"],
 
   "action": {
     "default_popup": "index.html",

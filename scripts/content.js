@@ -1,10 +1,9 @@
 // Get the current URL
-const baseUrl = window.location.href;
-console.log(baseUrl);
-
+// const baseUrl = window.location.href;
+// console.log(baseUrl);
 
 // Function to extract the URL of the last page link
-function extractLastPageUrl() {
+function extractLastPageUrl(baseUrl) {
 
     const dlDetails = []; //init return value for extraction
 
@@ -31,7 +30,7 @@ function extractLastPageUrl() {
                 const urlParts = lastPageUrl.split('/'); // Split the URL by '/'
                 const pageNumberIndex = urlParts.indexOf('dmsDocPage') + 1; // Find the index of 'dmsDocPage' and get the next part
 
-                let pageNumber = null;
+                // let pageNumber = null;
                 if (pageNumberIndex < urlParts.length) {
                     pageNumber = parseInt(urlParts[pageNumberIndex], 10); // Convert the next part to an integer
                     dlDetails.push(pageNumber);
@@ -55,7 +54,6 @@ function extractLastPageUrl() {
         } else {
 
           // edge case if it's only one page: no dmsDocPage in href. -> 
-
           // baseUrl equals the last page
           dlDetails.push(baseUrl);
           // there's only 1 page to loop through
@@ -71,43 +69,56 @@ function extractLastPageUrl() {
 
 
 async function downloadLinks(url) {
-    // Fetch the HTML content of the page
-    const response = await fetch(url);
-    const html = await response.text();
+    try {
+      // Fetch the HTML content of the page
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+      const html = await response.text();
+
+      // Parse the HTML content
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
   
-    // Parse the HTML content
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+      // Select all elements with the class 'icon_item_download' and title 'download'
+      const dlLinks = doc.querySelectorAll('a.icon_item_download[title="herunterladen"]');
   
-    // Select all elements with the class 'icon_item_download' and title 'download'
-    const dlLinks = doc.querySelectorAll('a.icon_item_download[title="herunterladen"]');
+      // Loop through each link and simulate a click with a delay
+      dlLinks.forEach((link, index) => {
+        setTimeout(() => {
+          // Create a new anchor element in the current page's DOM
+          const anchor = document.createElement('a');
+          anchor.href = link.href;
+          anchor.download = link.download;
   
-    // Loop through each link and simulate a click with a delay
-    dlLinks.forEach((link, index) => {
-      setTimeout(() => {
-        // Create a new anchor element in the current page's DOM
-        const anchor = document.createElement('a');
-        anchor.href = link.href;
-        anchor.download = link.download;
-  
-        // Simulate a click on the new anchor element
-        anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-      }, index * 500); // 500ms delay between each click
-    });
+         // Simulate a click on the new anchor element
+          anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+        }, index * 500); // 500ms delay between each click
+     });
+    } catch (error) {
+      console.error('Failed to download links:', error);
+    }
   }
 
 
   async function downloadPdf(urlLink, pageNumber){
+    try {
+      for (let i = 1; i <= pageNumber; i++) {
+          // Update the URL with the current page number
+          const url = `${urlLink}${i}`;
+          console.log(`Page ${i} opened`);
+          await downloadLinks(url);
+          await new Promise(resolve => setTimeout(resolve, 5000)); // 5-second delay between pages
+          if (i < pageNumber) { //avoid wait after last page
+            await new Promise(resolve => setTimeout(resolve, 5000));
+          }
+        }
 
-    for (let i = 1; i <= pageNumber; i++) {
-        // Update the URL with the current page number
-        const url = `${urlLink}${i}`;
-        console.log(`Page ${i} opened`);
-        await downloadLinks(url);
-        await new Promise(resolve => setTimeout(resolve, 5000)); // 5-second delay between pages
-      }
-
-      console.log("Finished download.");
+        console.log("Finished download.");
+    } catch (error) {
+      console.error('Error during downloadPdf execution:', error);
+      throw error;
+    }     
   }
 
 
@@ -115,32 +126,81 @@ async function downloadLinks(url) {
 /* actual execution code starts here */
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/*
 chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
   if (request.action === "download") {
+    const baseUrl = window.location.href
+    console.log("Current url: ", baseUrl)
     console.log("Request to download received!");
+
     let response = {status: "BUSY WITH DOWNLOAD"};
 
     try {
-      const details = await extractLastPageUrl(); // Await the Promise to get the resolved value
+      const details = await extractLastPageUrl(baseUrl); // Await the Promise to get the resolved value
       console.log(details);
 
       if (details.length === 3) { // Ensure that you have the expected data
         await downloadPdf(details[2], details[1]); // Await the downloadPdf function
         response = {status: "SUCCESS"};
-      } else {
-        if (details.length === 6){
+      } else if (details.length === 6){
           await downloadPdf(details[5], details[4]); // Await the downloadPdf function
           response = {status: "SUCCESS"};
-        }
-        else{
-          console.error('Expected details not found:', details);
-          response = {status: "ERROR", message: 'Expected details not found'};
-        }
+      } else{
+        console.error('Expected details not found:', details);
+        response = {status: "ERROR", message: 'Expected details not found'};
       }
     } catch (error) {
       console.error('Error during download process:', error);
       response = {status: "ERROR", message: error.message};
     }
+
     sendResponse(response);
-  }
+    return true;
+  } 
+}); */
+
+// with logs
+chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+    if (request.action === "download") {
+        sendResponse({status: 'PROCESSING'});
+        const baseUrl = window.location.href; 
+        console.log("Current url: ", baseUrl);
+        console.log("Request to download received!");
+
+        let response = {status: "BUSY WITH DOWNLOAD"};
+
+        try {
+            const details = await extractLastPageUrl(baseUrl);
+            console.log("Extracted details:", details); // Logging output
+
+            if (details.length === 3) {
+                await downloadPdf(details[2], details[1]); 
+                response = {status: "SUCCESS"};
+            } else if (details.length === 6) {
+                await downloadPdf(details[5], details[4]);
+                response = {status: "SUCCESS"};
+            } else {
+                console.error('Expected details not found:', details);
+                response = {status: "ERROR", message: 'Expected details not found'};
+            }
+        } catch (error) {
+            console.error('Error during download process:', error);
+            response = {status: "ERROR", message: error.message};
+        }
+
+        console.log("Sending response:", response); // Log before sending
+        // sendResponse(response);
+        sendResponse({status: "success"});
+        return true; 
+    }
+
+    return true;
 });
+
+
+/* chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+    if (request.action === "download") {
+        sendResponse({status: "TEST SUCCESS"}); // Simplified for testing
+        return true; 
+    }
+  }); */
